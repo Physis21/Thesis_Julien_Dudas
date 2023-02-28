@@ -17,15 +17,25 @@ Nb = embed(basis,2,number(basis_b))
 
 vacuum = fockstate(basis_a,0)⊗fockstate(basis_b,0)
 
-meas_max = 7
+# meas_max = 7
+# wA = 10e9
+# wB = 9.5e9
+# g = 7e8
+
+# κA = 1e8
+# κB = 1e8
+# eA = 5e6
+# eB = 1e6
+
+meas_max = 3
 wA = 10e9
-wB = 9.5e9
+wB = 9e9
 g = 7e8
 
-κA = 1e8
-κB = 1e8
-eA = 5e6
-eB = 1e6
+κA = 17e6
+κB = 21e6
+eA = 2e6
+eB = 2e6
 
 #some useful testing functions
 
@@ -40,9 +50,9 @@ figpath = "C:/Users/julie/Downloads/"
 #κA =  $(@sprintf("%.2e", κA)), κB =  $(@sprintf("%.2e", κB))
 #eA =  $(@sprintf("%.2e", eA)), eB =  $(@sprintf("%.2e", eB))"
 
-figure_title = "Reservoir simulation for wA = 10e9,wB = 9.5e9, g = 7e8
-kA = 1e8, kB = 1e8
-eA = 5e6, eB = 1e6"
+figure_title = "Reservoir simulation for wA = 10e9,wB = 9e9, g = 7e8
+kA = 17e6, kB = 21e6
+eA = 2e6, eB = 2e6"
 
 ## Set Hamiltonian functions
 

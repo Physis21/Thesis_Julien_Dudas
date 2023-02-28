@@ -48,7 +48,8 @@ training_x,training_y,test_x,test_y = createDataset(100,20)
 time_resolution = 300
 time_interval = 100  # ns
 offset = 1
-sampling = 6
+# sampling = 6
+sampling = 1
 
 function classification_task()
     println("calculation initialized")
@@ -91,3 +92,5 @@ function classification_task()
 
     println("end of calculation")
 end
+
+classification_task()
