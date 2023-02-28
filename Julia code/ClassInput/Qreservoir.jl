@@ -2,8 +2,7 @@ using QuantumOptics
 using Printf
 using Plots
 using BenchmarkTools
-
-#useful quantum operators and kets
+using Random
 
 Ndim = 9
 basis_a = FockBasis(Ndim)
@@ -159,6 +158,54 @@ function constant_drive_change(train=squaresin,time_interval=100,offset=1,show=1
 end
 
 function Qmodel(train,time_interval,resolution,multiplexing,offset=0)
+    train_length = length(train)
+    eA_ar = [eA*(i+offset) for i in train]
+    eB_ar = [eB*(i+offset) for i in train]
+    ψ = vacuum
+    reservoir_output = zeros(train_length,multiplexing*(meas_max+1)^2 )
+    input_times = zeros(train_length,resolution)
+    for i in 1:train_length
+        for j in 1:resolution
+            input_times[i,j] = ((i-1)*time_interval + j*(time_interval/resolution))*(10^-9)
+        end
+        param_drive = [κA,κB,eA_ar[i],eB_ar[i]]
+        H_full = H_0(param_0) + H_drive(param_drive)
+
+        tout,states = timeevolution.master(input_times[i,:],ψ,H_full,c_ops,rates=[κA,κB])
+        temp_ar = Float64[]
+        for k in 1:multiplexing
+            rho_mes = states[k*(resolution÷multiplexing)]
+            normalize!(rho_mes)
+            for i1 in 0:meas_max
+                for i2 in 0:meas_max
+                    # !!!
+                    temp = expect(rho_mes,fockstate(basis_a,i1)⊗fockstate(basis_b,i2))
+                    push!(temp_ar,abs(temp)^2)
+                end
+            end
+        end
+        reservoir_output[i,:] = temp_ar
+        ψ = states[end]
+        if i%100 == 0
+            println("100 simulations passed, i = ", i)
+        end
+    end
+    input_times = zeros(train_length)
+    for i in 1:train_length
+        input_times[i] = (i*time_interval)*(10^-9)
+    end
+    return input_times,reservoir_output
+end
+
+function Qmeasure_shot(Aop , ρ)
+    for i1 in 0:meas_max
+        for i2 in 0:meas_max
+        
+        end
+    end
+end
+
+function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shots = 10)
     train_length = length(train)
     eA_ar = [eA*(i+offset) for i in train]
     eB_ar = [eB*(i+offset) for i in train]
