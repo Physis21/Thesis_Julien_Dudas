@@ -207,12 +207,27 @@ function Qmodel(train,time_interval,resolution,multiplexing,offset=0)
     return input_times,reservoir_output
 end
 
-function Qmeasure_shot(Aop , ρ)
+function Qmeasure_shot(ρ)
+    #start temp_ar at 0 for later cumulative prob distribution
+    result_ar = Tuple{Int64, Int64}[]
+    temp_ar = [0]
     for i1 in 0:meas_max
         for i2 in 0:meas_max
-        
+            temp = expect(ρ, fockstate(basis_a,i1)⊗fockstate(basis_b,i2))
+            push!(temp_ar,abs(temp)^2)
+            push!(result_ar, (i1,i2))
         end
     end
+    normalize!(temp_ar)
+    #we have probability distribution, now sum proba into cumulative distribution and locate a random [0,1) in the distribution to see where it lands
+    temp_ar = accumulate(+, temp_ar)
+    localize = rand()
+    for i in 1:length(temp_ar)
+        if (localize >= temp_ar[i-1]) && (localize <= temp_ar[i])
+            result = result_ar[i-1]
+        end
+    end
+    return result
 end
 
 function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shots = 10)
@@ -241,6 +256,9 @@ function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot
                     push!(temp_ar,abs(temp)^2)
                 end
             end
+
+            # add shot 
+            
         end
         reservoir_output[i,:] = temp_ar
         ψ = states[end]
@@ -254,3 +272,4 @@ function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot
     end
     return input_times,reservoir_output
 end
+
