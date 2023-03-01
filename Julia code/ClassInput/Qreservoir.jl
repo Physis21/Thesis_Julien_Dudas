@@ -4,7 +4,7 @@ using Plots
 using BenchmarkTools
 using Random
 
-Ndim = 9
+Ndim = 7
 basis_a = FockBasis(Ndim)
 basis_b = FockBasis(Ndim)
 basis = basis_a ⊗ basis_b
@@ -190,7 +190,8 @@ function Qmodel(train,time_interval,resolution,multiplexing,offset=0)
                 for i2 in 0:meas_max
                     # !!!
                     temp = expect(rho_mes,fockstate(basis_a,i1)⊗fockstate(basis_b,i2))
-                    push!(temp_ar,abs(temp)^2)
+                    # push!(temp_ar,abs(temp)^2)   !!! previous error because temp is imaginary
+                    push!(temp_ar,real(temp))
                 end
             end
         end
@@ -218,15 +219,19 @@ function Qmeasure_shot(ρ)
             push!(result_ar, (i1,i2))
         end
     end
-    normalize!(temp_ar)
+    print("creation of probability matrix")
+    # normalize!(temp_ar)
+    # printf("normalization finished")
     #we have probability distribution, now sum proba into cumulative distribution and locate a random [0,1) in the distribution to see where it lands
     temp_ar = accumulate(+, temp_ar)
     localize = rand()
-    for i in 1:length(temp_ar)
-        if (localize >= temp_ar[i-1]) && (localize <= temp_ar[i])
-            result = result_ar[i-1]
+    result = (0,0)
+    for i in 1:(length(temp_ar)-1)
+        if (localize >= temp_ar[i]) && (localize <= temp_ar[i+1])
+            result = result_ar[i]
         end
     end
+    print("result computed")
     return result
 end
 
@@ -253,7 +258,8 @@ function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot
                 for i2 in 0:meas_max
                     # !!!
                     temp = expect(rho_mes,fockstate(basis_a,i1)⊗fockstate(basis_b,i2))
-                    push!(temp_ar,abs(temp)^2)
+                    # push!(temp_ar,abs(temp)^2)   !!! previous error because temp is imaginary
+                    push!(temp_ar,real(temp))
                 end
             end
 
