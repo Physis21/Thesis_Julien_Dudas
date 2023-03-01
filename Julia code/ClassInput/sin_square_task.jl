@@ -92,16 +92,16 @@ function classification_task()
     println("training complete")
     ##model
     global time_plot, X_test = Qmodel(test_x,time_interval,time_resolution,sampling,offset)
-    global predicted_test = X_test * W
+    global Y_test = X_test * W
 
     println("testing complete")
     ## Compute and print the accuracy
     global correct0 = 0
-    for m in 1:length(predicted_test)
-        global correct0 += ((predicted_test[m]>0.5) == test_y[m])
+    for m in 1:length(Y_test)
+        global correct0 += ((Y_test[m]>0.5) == test_y[m])
     end
     global correct0=correct0/size(test_y)[1]
-    global final_plot = hcat(predicted_test,test_x,test_y)
+    global final_plot = hcat(Y_test,test_x,test_y)
     println("accuracy= " ,correct0)
 
     # index_min = 400
@@ -123,8 +123,8 @@ function classification_task()
 
     #save JLD2 file
 
-    filename = string("JD_sin_square_features_coupling=", g, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
-    save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", predicted_test)
+    filename = string("sin_square_features_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
+    save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test)
 
     println("end of calculation")
 end
