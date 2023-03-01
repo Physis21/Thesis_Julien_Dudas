@@ -62,12 +62,12 @@ function createDataset(nb_exemples)
 end
 training_x,training_y,test_x,test_y = createDataset(100)
 
-#gr()
-#p = plot(training_x[1:75],
-#seriestype=:scatter,markersize = 8,
-#size=(1132,700),tickfontsize = 12,legend = false,fmt=:pdf)
-#display(p)
-#savefig(figpath*"sinesquare.pdf")
+# gr()
+# p = plot(training_x[1:75],
+# seriestype=:scatter,markersize = 8,
+# size=(1132,700),tickfontsize = 12,legend = false,fmt=:pdf)
+# display(p)
+# savefig(figpath*"sinesquare.pdf")
 
 
 # time_ar = 1:length(training_x)
@@ -121,7 +121,11 @@ function classification_task()
     display(p)
     savefig(p,figpath*"classification.pdf")
 
+    #save JLD2 file
+
+    filename = string("JD_sin_square_features_coupling=", g, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
+    save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", predicted_test)
+
     println("end of calculation")
 end
 
-classification_task()
