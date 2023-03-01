@@ -5,7 +5,7 @@ using BenchmarkTools
 using Random
 using JLD2
 
-Ndim = 5
+Ndim = 7
 basis_a = FockBasis(Ndim)
 basis_b = FockBasis(Ndim)
 basis = basis_a ⊗ basis_b
@@ -28,7 +28,7 @@ vacuum = fockstate(basis_a,0)⊗fockstate(basis_b,0)
 # eA = 5e6
 # eB = 1e6
 
-meas_max = 3
+meas_max = 5
 wA = 10e9
 wB = 9e9
 g = 7e8
@@ -127,7 +127,7 @@ function constant_drive_change(train=squaresin,time_interval=100,offset=1,show=1
                 for i2 in 0:meas_max
                     # !!!
                     temp = expect(rho_mes,fockstate(basis_a,i1)⊗fockstate(basis_b,i2))
-                    push!(temp_ar,abs(temp)^2)
+                    push!(temp_ar,real(temp))
                 end
             end
             reservoir_output[(i-1)*resolution + k,:] = temp_ar
@@ -212,28 +212,38 @@ end
 function Qmeasure_shot(ρ)
     #start temp_ar at 0 for later cumulative prob distribution
     result_ar = Tuple{Int64, Int64}[]
-    temp_ar = [0]
+    temp_ar = [0.0]
     for i1 in 0:meas_max
         for i2 in 0:meas_max
             temp = expect(ρ, fockstate(basis_a,i1)⊗fockstate(basis_b,i2))
-            push!(temp_ar,abs(temp)^2)
+            push!(temp_ar,real(temp))
             push!(result_ar, (i1,i2))
+            
         end
     end
-    print("creation of probability matrix")
+    println("creation of probability matrix")
     # normalize!(temp_ar)
     # printf("normalization finished")
     #we have probability distribution, now sum proba into cumulative distribution and locate a random [0,1) in the distribution to see where it lands
     temp_ar = accumulate(+, temp_ar)
+    println("probability distribution = ", temp_ar)
     localize = rand()
+    println("localize = ", localize)
     result = (0,0)
+    found = 0
     for i in 1:(length(temp_ar)-1)
         if (localize >= temp_ar[i]) && (localize <= temp_ar[i+1])
             result = result_ar[i]
+            found = 1
         end
     end
-    print("result computed")
+    #if no shot is measured, assume the projected energy state is beyond what we can measure, so return highest measurable by default
+    if found == 0
+        result = result_ar[end]
+    end
+    println("result computed")
     return result
+    
 end
 
 function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shots = 10)
