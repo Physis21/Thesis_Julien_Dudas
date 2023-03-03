@@ -209,7 +209,7 @@ function Qmodel(train,time_interval,resolution,multiplexing,offset=0)
     return input_times,reservoir_output
 end
 
-function Qmeasure_shot(ρ)
+function Qmeasure_shot(ρ, shot_nb=1)
     #start temp_ar at 0 for later cumulative prob distribution
     result_ar = Tuple{Int64, Int64}[]
     temp_ar = [0.0]
@@ -227,22 +227,34 @@ function Qmeasure_shot(ρ)
     #we have probability distribution, now sum proba into cumulative distribution and locate a random [0,1) in the distribution to see where it lands
     temp_ar = accumulate(+, temp_ar)
     println("probability distribution = ", temp_ar)
-    localize = rand()
-    println("localize = ", localize)
-    result = (0,0)
-    found = 0
-    for i in 1:(length(temp_ar)-1)
-        if (localize >= temp_ar[i]) && (localize <= temp_ar[i+1])
-            result = result_ar[i]
-            found = 1
-        end
+
+    # create a number of projections equal to shot_nb
+    localize_ar = Float64[]
+    shots = Tuple{Int64, Int64}[]
+    for i in 1:shot_nb
+        localize = rand()
+        push!(localize_ar,localize)
     end
-    #if no shot is measured, assume the projected energy state is beyond what we can measure, so return highest measurable by default
-    if found == 0
-        result = result_ar[end]
+    
+    println("localize rands = ", localize_ar)
+    for i in 1:shot_nb
+        result = (0,0)
+        found = 0
+        localize = localize_ar[i]
+        for i in 1:(length(temp_ar)-1)
+            if (localize >= temp_ar[i]) && (localize <= temp_ar[i+1])
+                result = result_ar[i]
+                found = 1
+            end
+        end
+        #if no shot is measured, assume the projected energy state is beyond what we can measure, so return highest measurable by default
+        if found == 0
+            result = result_ar[end]
+        end
+        push!(shots, result)
     end
     println("result computed")
-    return result
+    return shots
     
 end
 

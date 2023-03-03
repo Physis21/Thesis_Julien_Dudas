@@ -18,7 +18,7 @@ margin = 5Plots.mm,
 shape = :circle,
 tickfontsize = 10,legendfontsize=12,fmt=:pdf,
 label=["classical static" "classical dynamic" "quantum basis states"],linewidth = 3,
-legend=:right)
+legend=:bottomright)
 xlabel!(p,"Number of neurons")
 ylabel!("Accuracy")
 display(p)
