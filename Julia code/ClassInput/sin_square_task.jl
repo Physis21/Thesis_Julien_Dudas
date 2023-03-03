@@ -124,7 +124,8 @@ function classification_task()
     #save JLD2 file
 
     filename = string("sin_square_features_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
-    save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test)
+    #target (test_y) is useful for post processing
+    save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test, "target", test_y)
 
     println("end of calculation")
 end

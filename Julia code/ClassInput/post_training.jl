@@ -27,7 +27,7 @@ wB= 9
 κA= 17e6
 κB= 21e6
 g = 700e6
-meas_max=3
+meas_max=4
 sampling = 1
 gr()
 
@@ -42,11 +42,14 @@ X = load(filename, "X")
 X_test = load(filename, "X_test")
 Y = load(filename, "Y")
 Y_test = load(filename, "Y_test")
-
+# target = load(filename, "target")
+#target is practically equal to Y_test for high enough neuron number
+target = [(y>0.5) for y in Y_test]
 # W = pinv(X) * Y
 
 # now that they are loaded, can change meas_max with same dataset to truncate higher level probs
-meas_max_new = 2
+meas_max_new = 4
+
 X_new = zeros(size(X)[1], sampling*(meas_max_new+1)^2 )
 X_test_new = zeros(size(X_test)[1], sampling*(meas_max_new+1)^2 )
 for i1 in 1:size(X)[1]
@@ -61,9 +64,9 @@ W = pinv(X_new) * Y
 
 predicted_test = X_test_new * W
 
-compute_accuracy(predicted_test, Y_test)
+accuracy = compute_accuracy(predicted_test, target)
 
-final_plot=hcat(predicted_test, Y_test)
+final_plot=hcat(predicted_test, Y_test, target)
 
 index_min = 1
 index_max = 81
@@ -82,7 +85,9 @@ label=["prediction" "data" "target"],linewidth = 3,
 legend=:right)
 xlabel!(p,"Time (us)")
 display(p)
-savefig("performance_9_neurons.pdf")
+
+figname = string("sin_square_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
+savefig(figname)
 
 
 

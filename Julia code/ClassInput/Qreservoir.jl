@@ -28,7 +28,7 @@ vacuum = fockstate(basis_a,0)⊗fockstate(basis_b,0)
 # eA = 5e6
 # eB = 1e6
 
-meas_max = 5
+meas_max = 4
 wA = 10e9
 wB = 9e9
 g = 7e8
