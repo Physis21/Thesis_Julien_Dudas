@@ -258,7 +258,14 @@ function Qmeasure_shot(ρ, shot_nb=1)
     
 end
 
-function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shots = 10)
+function Qmeasure_shot_mean_error(ρ, shot_nb=1)
+    # if all the shots are different, can't make error bars
+    shots = Qmeasure_shot(ρ, shot_nb)
+
+
+end
+
+function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot_nb = 10)
     train_length = length(train)
     eA_ar = [eA*(i+offset) for i in train]
     eB_ar = [eB*(i+offset) for i in train]

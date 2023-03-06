@@ -27,13 +27,14 @@ wB= 9
 κA= 17e6
 κB= 21e6
 g = 700e6
-meas_max=4
+meas_max=5
 sampling = 1
 gr()
 
 figure_title = string("wA =", wA, "GHz, wB = ", wB, "GHz, g =", g/1e6, "MHz,
 κA =", κA/1e6, "MHz, κB =", κB/1e6, "MHz, sampling=", sampling, "_meas_max=", meas_max )
-filename = string("sin_square_features_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
+filename = string("sin_square_features_eA=5MHz_eB=2MHz_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
+# filename = string("sin_square_features_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
 
 figname = string("sin_square_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".pdf")
 
@@ -42,6 +43,7 @@ X = load(filename, "X")
 X_test = load(filename, "X_test")
 Y = load(filename, "Y")
 Y_test = load(filename, "Y_test")
+
 # target = load(filename, "target")
 #target is practically equal to Y_test for high enough neuron number
 target = [(y>0.5) for y in Y_test]
@@ -86,7 +88,7 @@ legend=:right)
 xlabel!(p,"Time (us)")
 display(p)
 
-figname = string("sin_square_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
+figname = string("sin_square_eA=5MHz_eB=2MHz_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
 savefig(figname)
 
 
