@@ -4,8 +4,8 @@ using Printf
 neuron_numbers = [4, 9, 16, 25]
 accuracies_classical_static = [50, 59, 80.5, 92]
 accuracies_classical_dynamic = [61, 85, 96.5, 99.5]
-accuracies_quantum = [68.59, 93.7, 100.0, 100.0]
-
+# accuracies_quantum = [68.59, 93.7, 100.0, 100.0]
+accuracies_quantum = [52.51, 100, 96.98, 100.0]
 accuracies = hcat(accuracies_classical_static, accuracies_classical_dynamic, accuracies_quantum)
 
 
@@ -23,5 +23,5 @@ xlabel!(p,"Number of neurons")
 ylabel!("Accuracy")
 display(p)
 
-figname = string("accuracies_plot.pdf")
+figname = string("accuracies_eA=5MHz_eB=2MHz_plot.pdf")
 savefig(figname)
