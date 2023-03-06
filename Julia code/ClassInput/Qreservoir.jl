@@ -6,7 +6,7 @@ using Random
 using JLD2
 
 #usually keep Ndim = 7 for computing speed and accuracy of quantum simulations
-Ndim = 10
+Ndim = 7
 basis_a = FockBasis(Ndim)
 basis_b = FockBasis(Ndim)
 basis = basis_a ⊗ basis_b
@@ -36,8 +36,8 @@ g = 7e8
 
 κA = 17e6
 κB = 21e6
-eA = 5e6
-eB = 2e6
+eA = 9e5
+eB = 5e5
 
 #some useful testing functions
 
@@ -52,9 +52,9 @@ figpath = "C:/Users/julie/Downloads/"
 #κA =  $(@sprintf("%.2e", κA)), κB =  $(@sprintf("%.2e", κB))
 #eA =  $(@sprintf("%.2e", eA)), eB =  $(@sprintf("%.2e", eB))"
 
-figure_title = "Reservoir simulation for wA = 10e9,wB = 9e9, g = 7e8
-kA = 17e6, kB = 21e6
-eA = 5e6, eB = 2e6"
+figure_title = string("Reservoir simulation for wA = ", wA, ", wB = ", wB, ", g = ", g, "
+kA = ", κA, ", kB = ", κA,"
+eA = ", eA,", eB = ", eB, ", Ndim = ", Ndim)
 
 ## Set Hamiltonian functions
 
@@ -94,7 +94,7 @@ function constant_drive(show = 1,resolution = 10000, max_time = 50*(10^-9))
         ylabel!(p,"Average populations")
         display(p)
         #savefig(figpath*"constantdrive_high_g.pdf")
-        savefig(figpath*"test_khigh_ehigh.pdf")
+        savefig(figpath*"test_eA=9e5_eB=9e5_Ndim=10.pdf")
     end
 
 end
