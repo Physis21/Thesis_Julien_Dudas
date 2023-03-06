@@ -5,7 +5,8 @@ using BenchmarkTools
 using Random
 using JLD2
 
-Ndim = 7
+#usually keep Ndim = 7 for computing speed and accuracy of quantum simulations
+Ndim = 10
 basis_a = FockBasis(Ndim)
 basis_b = FockBasis(Ndim)
 basis = basis_a ⊗ basis_b
@@ -28,14 +29,14 @@ vacuum = fockstate(basis_a,0)⊗fockstate(basis_b,0)
 # eA = 5e6
 # eB = 1e6
 
-meas_max = 4
+meas_max = 5
 wA = 10e9
 wB = 9e9
 g = 7e8
 
 κA = 17e6
 κB = 21e6
-eA = 2e6
+eA = 5e6
 eB = 2e6
 
 #some useful testing functions
@@ -53,7 +54,7 @@ figpath = "C:/Users/julie/Downloads/"
 
 figure_title = "Reservoir simulation for wA = 10e9,wB = 9e9, g = 7e8
 kA = 17e6, kB = 21e6
-eA = 2e6, eB = 2e6"
+eA = 5e6, eB = 2e6"
 
 ## Set Hamiltonian functions
 

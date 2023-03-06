@@ -50,7 +50,7 @@ target = [(y>0.5) for y in Y_test]
 # W = pinv(X) * Y
 
 # now that they are loaded, can change meas_max with same dataset to truncate higher level probs
-meas_max_new = 1
+meas_max_new = 3
 
 X_new = zeros(size(X)[1], sampling*(meas_max_new+1)^2 )
 X_test_new = zeros(size(X_test)[1], sampling*(meas_max_new+1)^2 )
