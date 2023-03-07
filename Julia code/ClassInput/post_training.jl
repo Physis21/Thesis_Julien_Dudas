@@ -33,7 +33,7 @@ gr()
 
 figure_title = string("wA =", wA, "GHz, wB = ", wB, "GHz, g =", g/1e6, "MHz,
 κA =", κA/1e6, "MHz, κB =", κB/1e6, "MHz, sampling=", sampling, "_meas_max=", meas_max )
-filename = string("sin_square_features_eA=9e5_eB=5e5_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
+filename = string("sin_square_features_eA=9e5_eB=9e5_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
 # filename = string("sin_square_features_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
 
 figname = string("sin_square_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".pdf")
@@ -88,7 +88,7 @@ legend=:right)
 xlabel!(p,"Time (us)")
 display(p)
 
-figname = string("sin_square_eA=9e5_eB=5e5_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
+figname = string("sin_square_eA=9e5_eB=9e5_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
 savefig(figname)
 
 
