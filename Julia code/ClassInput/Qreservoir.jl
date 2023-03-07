@@ -6,7 +6,7 @@ using Random
 using JLD2
 
 #usually keep Ndim = 7 for computing speed and accuracy of quantum simulations
-Ndim = 7
+Ndim = 8
 basis_a = FockBasis(Ndim)
 basis_b = FockBasis(Ndim)
 basis = basis_a ⊗ basis_b
@@ -36,10 +36,11 @@ g = 7e8
 
 κA = 17e6
 κB = 21e6
-eA = 9e5
-eB = 5e5
+eA = 1.2e6
+eB = 1.2e6
 
-# !!!!! for these parameters, eA and eB shouldn't exceed 1e6
+# !!!!! for these parameters and Ndim = 7, eA and eB shouldn't exceed 0.9e6
+# !!!!! for these parameters and Ndim = 8, eA and eB shouldn't exceed 1.2e6
 #some useful testing functions
 
 T = LinRange(0,2*pi,20)
@@ -95,7 +96,7 @@ function constant_drive(show = 1,resolution = 10000, max_time = 50*(10^-9))
         ylabel!(p,"Average populations")
         display(p)
         #savefig(figpath*"constantdrive_high_g.pdf")
-        savefig(figpath*"test_eA=9e5_eB=9e5_Ndim=10.pdf")
+        savefig(figpath*"test_eA=1.2e6_eB=1.2e6_Ndim=8.pdf")
     end
 
 end
@@ -223,12 +224,14 @@ function Qmeasure_shot(ρ, shot_nb=1)
             
         end
     end
-    println("creation of probability matrix")
-    # normalize!(temp_ar)
-    # printf("normalization finished")
+    # println("creation of probability matrix")
+
+    ## normalize!(temp_ar)
+    ## printf("normalization finished")
     #we have probability distribution, now sum proba into cumulative distribution and locate a random [0,1) in the distribution to see where it lands
     temp_ar = accumulate(+, temp_ar)
-    println("probability distribution = ", temp_ar)
+
+    # println("probability distribution = ", temp_ar)
 
     # create a number of projections equal to shot_nb
     localize_ar = Float64[]
@@ -238,7 +241,7 @@ function Qmeasure_shot(ρ, shot_nb=1)
         push!(localize_ar,localize)
     end
     
-    println("localize rands = ", localize_ar)
+    # println("localize rands = ", localize_ar)
     for i in 1:shot_nb
         result = (0,0)
         found = 0
@@ -256,13 +259,24 @@ function Qmeasure_shot(ρ, shot_nb=1)
         push!(shots, result)
     end
     println("result computed")
-    return shots
+    return shots, result_ar
     
 end
 
-function Qmeasure_shot_mean_error(ρ, shot_nb=1)
+function Qmeasure_shot_mean_error(ρ, shot_nb=100)
+    
     # if all the shots are different, can't make error bars
-    shots = Qmeasure_shot(ρ, shot_nb)
+    shots, shot_possibilities = Qmeasure_shot(ρ, shot_nb)
+    shot_means = zeros(length(shot_possibilities))
+    for shot1 in shot_possibilities
+        for shot2 in shots
+            if shot1 == shot2
+                
+            end
+        end
+
+
+    end
 
 
 end

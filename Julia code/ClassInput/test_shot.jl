@@ -18,7 +18,9 @@ for i1 in 0:meas_max
 end
 
 # println(test_ρ)
-test_result = Qmeasure_shot(test_ρ, 3)
+test_result, possible_shot_results = Qmeasure_shot(test_ρ, 3)
 for i in 1:length(test_result)
     println(test_result[i])
 end
+
+Qmeasure_shot_mean_error(test_ρ)
