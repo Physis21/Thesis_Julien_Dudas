@@ -15,8 +15,8 @@ function compute_accuracy(predicted_test, test_y)
         error += (predicted_test[m] - test_y[m])^2
 
     end
-    accuracy=correct0/(size(test_y)[1] - 3)
-    rmse = sqrt(error/(size(test_y)[1] - 3))
+    accuracy=correct0/(size(test_y)[1] - 2)
+    rmse = sqrt(error/(size(test_y)[1] - 2))
     
     println("accuracy= " , accuracy)
     println("rmse=", rmse)
@@ -33,7 +33,7 @@ gr()
 
 figure_title = string("wA =", wA, "GHz, wB = ", wB, "GHz, g =", g/1e6, "MHz,
 κA =", κA/1e6, "MHz, κB =", κB/1e6, "MHz, sampling=", sampling, "_meas_max=", meas_max )
-filename = string("sin_square_features_eA=5MHz_eB=2MHz_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
+filename = string("sin_square_features_eA=9e5_eB=5e5_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
 # filename = string("sin_square_features_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
 
 figname = string("sin_square_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".pdf")
@@ -44,13 +44,13 @@ X_test = load(filename, "X_test")
 Y = load(filename, "Y")
 Y_test = load(filename, "Y_test")
 
-# target = load(filename, "target")
-#target is practically equal to Y_test for high enough neuron number
-target = [(y>0.5) for y in Y_test]
+target = load(filename, "target")
+# target is practically equal to Y_test for high enough neuron number
+# target = [(y>0.5) for y in Y_test]
 # W = pinv(X) * Y
 
 # now that they are loaded, can change meas_max with same dataset to truncate higher level probs
-meas_max_new = 3
+meas_max_new = 1
 
 X_new = zeros(size(X)[1], sampling*(meas_max_new+1)^2 )
 X_test_new = zeros(size(X_test)[1], sampling*(meas_max_new+1)^2 )
@@ -88,7 +88,7 @@ legend=:right)
 xlabel!(p,"Time (us)")
 display(p)
 
-figname = string("sin_square_eA=5MHz_eB=2MHz_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
+figname = string("sin_square_eA=9e5_eB=5e5_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
 savefig(figname)
 
 

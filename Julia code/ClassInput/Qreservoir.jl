@@ -39,6 +39,7 @@ g = 7e8
 eA = 9e5
 eB = 5e5
 
+# !!!!! for these parameters, eA and eB shouldn't exceed 1e6
 #some useful testing functions
 
 T = LinRange(0,2*pi,20)
