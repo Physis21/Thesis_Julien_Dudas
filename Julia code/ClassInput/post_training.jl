@@ -50,47 +50,51 @@ target = load(filename, "target")
 # W = pinv(X) * Y
 
 # now that they are loaded, can change meas_max with same dataset to truncate higher level probs
-meas_max_new = 5
+# meas_max_new = 5
 
-X_new = zeros(size(X)[1], sampling*(meas_max_new+1)^2 )
-X_test_new = zeros(size(X_test)[1], sampling*(meas_max_new+1)^2 )
-for i1 in 1:size(X)[1]
-    for i2 in 1:(sampling*(meas_max_new+1)^2)
-        X_new[i1,i2] = X[i1,i2]
-        X_test_new[i1,i2] = X_test[i1,i2]
+# make all plots at once
+
+for meas_max_new in 1:3
+
+    X_new = zeros(size(X)[1], sampling*(meas_max_new+1)^2 )
+    X_test_new = zeros(size(X_test)[1], sampling*(meas_max_new+1)^2 )
+    for i1 in 1:size(X)[1]
+        for i2 in 1:(sampling*(meas_max_new+1)^2)
+            X_new[i1,i2] = X[i1,i2]
+            X_test_new[i1,i2] = X_test[i1,i2]
+        end
+
     end
 
+    W = pinv(X_new) * Y
+
+    predicted_test = X_test_new * W
+
+    accuracy = compute_accuracy(predicted_test, target)
+
+    final_plot=hcat(predicted_test, Y_test, target)
+
+    index_min = 1
+    index_max = 81
+
+    index_min =25
+    index_max = 128
+
+    println("start plotting")
+    gr()
+    p = plot(1e6*time_plot[index_min-24:index_max-24],
+    final_plot[index_min:index_max,:],
+    size=(1132,400),
+    margin = 5Plots.mm,
+    tickfontsize = 14,legendfontsize=12,fmt=:pdf,
+    label=["prediction" "data" "target"],linewidth = 3,
+    legend=:right)
+    xlabel!(p,"Time (us)")
+    display(p)
+
+    figname = string("sin_square_eA=1.2e6_eB=1.2e6_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
+    savefig(figname)
 end
-
-W = pinv(X_new) * Y
-
-predicted_test = X_test_new * W
-
-accuracy = compute_accuracy(predicted_test, target)
-
-final_plot=hcat(predicted_test, Y_test, target)
-
-index_min = 1
-index_max = 81
-
-index_min =25
-index_max = 128
-
-println("start plotting")
-gr()
-p = plot(1e6*time_plot[index_min-24:index_max-24],
-final_plot[index_min:index_max,:],
-size=(1132,400),
-margin = 5Plots.mm,
-tickfontsize = 14,legendfontsize=12,fmt=:pdf,
-label=["prediction" "data" "target"],linewidth = 3,
-legend=:right)
-xlabel!(p,"Time (us)")
-display(p)
-
-figname = string("sin_square_eA=1.2e6_eB=1.2e6_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
-savefig(figname)
-
 
 
 
