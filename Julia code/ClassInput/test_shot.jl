@@ -23,4 +23,4 @@ for i in 1:length(test_result)
     println(test_result[i])
 end
 
-Qmeasure_shot_mean_error(test_ρ)
+Qmeasure_shot_mean_error(test_ρ, Ndim^4)

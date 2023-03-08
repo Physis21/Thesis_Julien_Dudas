@@ -258,7 +258,7 @@ function Qmeasure_shot(ρ, shot_nb=1)
         end
         push!(shots, result)
     end
-    println("result computed")
+    # println("result computed")
     return shots, result_ar
     
 end
@@ -267,21 +267,33 @@ function Qmeasure_shot_mean_error(ρ, shot_nb=100)
     
     # if all the shots are different, can't make error bars
     shots, shot_possibilities = Qmeasure_shot(ρ, shot_nb)
-    shot_means = zeros(length(shot_possibilities))
+    shot_means = Float64[]
+    shot_var = Float64[]
+    # search probability of occupation for each energy level
     for shot1 in shot_possibilities
+        apparition = 0
+        # search frequency of apparition of each projected state
         for shot2 in shots
             if shot1 == shot2
-                
+                apparition += 1
             end
         end
-
+        push!(shot_means,apparition/shot_nb)
+        push!(shot_var, apparition/shot_nb - (apparition/shot_nb)^2)
 
     end
 
-
+    # test to see the probabilities
+    # for i in 1:length(shot_possibilities)
+    #     print_output = string("state ", shot_possibilities[i], " has prob ", shot_means[i], " and var ", shot_var[i])
+    #     println(print_output)
+    # end
+    
+    # return shot_means, shot_var
+    return shot_means
 end
 
-function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot_nb = 10)
+function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot_nb = Ndim^4)
     train_length = length(train)
     eA_ar = [eA*(i+offset) for i in train]
     eB_ar = [eB*(i+offset) for i in train]
@@ -300,17 +312,17 @@ function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot
         for k in 1:multiplexing
             rho_mes = states[k*(resolution÷multiplexing)]
             normalize!(rho_mes)
-            for i1 in 0:meas_max
-                for i2 in 0:meas_max
-                    # !!!
-                    temp = expect(rho_mes,fockstate(basis_a,i1)⊗fockstate(basis_b,i2))
-                    # push!(temp_ar,abs(temp)^2)   !!! previous error because temp is imaginary
-                    push!(temp_ar,real(temp))
-                end
-            end
+            # for i1 in 0:meas_max
+            #     for i2 in 0:meas_max
+            #         !!!
+            #         temp = expect(rho_mes,fockstate(basis_a,i1)⊗fockstate(basis_b,i2))
+            #         push!(temp_ar,abs(temp)^2)  #  !!! previous error because temp is imaginary
+            #         push!(temp_ar,real(temp))
+            #     end
+            # end
 
             # add shot 
-            
+            temp_ar = Qmeasure_shot_mean_error(rho_mes, shot_nb)
         end
         reservoir_output[i,:] = temp_ar
         ψ = states[end]

@@ -60,7 +60,8 @@ function createDataset(nb_exemples)
 
     return training_x,training_y,test_x,test_y
 end
-training_x,training_y,test_x,test_y = createDataset(100)
+# training_x,training_y,test_x,test_y = createDataset(100)
+training_x,training_y,test_x,test_y = createDataset(25)
 
 # gr()
 # p = plot(training_x[1:75],
@@ -124,6 +125,56 @@ function classification_task()
     #save JLD2 file
 
     filename = string("sin_square_features_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
+    #target (test_y) is useful for post processing
+    save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test, "target", test_y)
+
+    println("end of calculation")
+end
+
+function classification_task_shots()
+    println("calculation initialized")
+
+    global time_plot, X = Qmodel_shots(training_x,time_interval,time_resolution,sampling,offset)
+    global Y = training_y
+    # Train the model by Moore-Penrose pseudoinversion.
+    global W = pinv(X) * Y
+    # Evaluate the model on the test set
+    # We pass the latest training state in order to avoid the need for another washout
+    println("training complete")
+    ##model
+    global time_plot, X_test = Qmodel_shots(test_x,time_interval,time_resolution,sampling,offset)
+    global Y_test = X_test * W
+
+    println("testing complete")
+    ## Compute and print the accuracy
+    global correct0 = 0
+    for m in 1:length(Y_test)
+        global correct0 += ((Y_test[m]>0.5) == test_y[m])
+    end
+    global correct0=correct0/size(test_y)[1]
+    global final_plot = hcat(Y_test,test_x,test_y)
+    println("accuracy= " ,correct0)
+
+    # index_min = 400
+    # index_max = 600
+
+    index_min = 20
+    index_max = 80
+    gr()
+    p = plot(1e9*time_plot[index_min:index_max],
+    final_plot[index_min:index_max,:],
+    size=(1132,700),title=figure_title,
+    margin = 5Plots.mm,
+    tickfontsize = 12,legendfontsize=12,fmt=:pdf,
+    label=["prediction" "data" "target"],linewidth = 3,
+    legend=:right,titlefontsize=12)
+    xlabel!(p,"Time (nanoseconds)")
+    display(p)
+    savefig(p,figpath*"classification_shots.pdf")
+
+    #save JLD2 file
+
+    filename = string("shots_sin_square_features_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
     #target (test_y) is useful for post processing
     save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test, "target", test_y)
 
