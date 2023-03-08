@@ -264,7 +264,7 @@ function Qmeasure_shot(ρ, shot_nb=1)
     
 end
 
-function Qmeasure_shot_mean_error(ρ, shot_nb=100, print_output = 0, histogram_output = 0)
+function Qmeasure_shot_mean(ρ, shot_nb=100, print_output = 0, histogram_output = 0)
     
     # if all the shots are different, can't make error bars
     shots, shot_possibilities = Qmeasure_shot(ρ, shot_nb)
@@ -337,7 +337,7 @@ function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot
             # end
 
             # add shot 
-            temp_ar = Qmeasure_shot_mean_error(rho_mes, shot_nb)
+            temp_ar = Qmeasure_shot_mean(rho_mes, shot_nb)
         end
         reservoir_output[i,:] = temp_ar
         ψ = states[end]
