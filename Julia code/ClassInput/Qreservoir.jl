@@ -237,6 +237,7 @@ function Qmeasure_shot(ρ, shot_nb=1)
     localize_ar = Float64[]
     shots = Tuple{Int64, Int64}[]
     for i in 1:shot_nb
+        # !!
         localize = rand()
         push!(localize_ar,localize)
     end
@@ -253,22 +254,21 @@ function Qmeasure_shot(ρ, shot_nb=1)
             end
         end
         #if no shot is measured, assume the projected energy state is beyond what we can measure, so return highest measurable by default
-        if found == 0
-            result = result_ar[end]
+        if found == 1
+            push!(shots, result)
         end
-        push!(shots, result)
+        
     end
     # println("result computed")
     return shots, result_ar
     
 end
 
-function Qmeasure_shot_mean_error(ρ, shot_nb=100)
+function Qmeasure_shot_mean_error(ρ, shot_nb=100, print_output = 0, histogram_output = 0)
     
     # if all the shots are different, can't make error bars
     shots, shot_possibilities = Qmeasure_shot(ρ, shot_nb)
     shot_means = Float64[]
-    shot_var = Float64[]
     # search probability of occupation for each energy level
     for shot1 in shot_possibilities
         apparition = 0
@@ -279,17 +279,32 @@ function Qmeasure_shot_mean_error(ρ, shot_nb=100)
             end
         end
         push!(shot_means,apparition/shot_nb)
-        push!(shot_var, apparition/shot_nb - (apparition/shot_nb)^2)
 
     end
 
     # test to see the probabilities
-    # for i in 1:length(shot_possibilities)
-    #     print_output = string("state ", shot_possibilities[i], " has prob ", shot_means[i], " and var ", shot_var[i])
-    #     println(print_output)
-    # end
+    if print_output == 1
+
+        for i in 1:length(shot_possibilities)
+            print_output = string("state ", shot_possibilities[i], " has prob ", shot_means[i])
+            println(print_output)
+        end
+        
+    end
+
+    if histogram_output == 1
+        println("print heatmap")
+        means_histogram = reshape(shot_means, meas_max+1, meas_max+1)
+        gr()
+        axis_level = 0:meas_max
+        h = heatmap(
+        axis_level, axis_level, (x, y)->means_histogram[x+1, y+1], c=:viridis,
+        nx=50, ny=50, 
+        )
+        display(h)
+
+    end
     
-    # return shot_means, shot_var
     return shot_means
 end
 
