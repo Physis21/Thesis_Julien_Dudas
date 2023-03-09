@@ -353,7 +353,7 @@ function Qmeasure_shot_error(ρ, shot_nb=100, N = (Ndim+1)^4, heatmap_output = 0
     end
 end
 
-function Qmeasure_shot_error_theory(ρ, N = (Ndim+1)^4, heatmap_output = 0)
+function Qmeasure_shot_error_theory(ρ, shot_nb = (Ndim+1)^4, heatmap_output = 0)
     real_values = Float64[]
 
     for i1 in 0:meas_max
@@ -363,8 +363,8 @@ function Qmeasure_shot_error_theory(ρ, N = (Ndim+1)^4, heatmap_output = 0)
     end
 
     #theoretical value of error with multinomial law
-
-    diff = [sqrt(p*(1-p)/N) for p in real_values]
+    
+    diff = [sqrt(p*(1-p)/shot_nb) for p in real_values]
 
     if heatmap_output == 1
 
@@ -378,7 +378,7 @@ function Qmeasure_shot_error_theory(ρ, N = (Ndim+1)^4, heatmap_output = 0)
         h = heatmap(
         axis_level, axis_level, (x, y)->log10.(diff_histogram[x+1, y+1]), c=:viridis,
         nx=50, ny=50, 
-        xlabel="b levels", ylabel = "a levels", title = string("theoretical shot error for ",L"N = {%$N}")
+        xlabel="b levels", ylabel = "a levels", title = string("theoretical shot error for ",L"shot_{nb} = {%$shot_nb}")
         )
         
         display(h)
@@ -386,9 +386,11 @@ function Qmeasure_shot_error_theory(ρ, N = (Ndim+1)^4, heatmap_output = 0)
 
     end
 
+    # return real_values, diff
+
 end
 
-function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot_nb = Ndim^4)
+function Qmodel_shots(train,time_interval,resolution,multiplexing,shot_nb=(Ndim+1)^4,offset=0,)
     train_length = length(train)
     eA_ar = [eA*(i+offset) for i in train]
     eB_ar = [eB*(i+offset) for i in train]
@@ -403,7 +405,7 @@ function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot
         H_full = H_0(param_0) + H_drive(param_drive)
 
         tout,states = timeevolution.master(input_times[i,:],ψ,H_full,c_ops,rates=[κA,κB])
-        temp_ar = Float64[]
+        temp_ar = Float64[]; errors = Float64[]
         for k in 1:multiplexing
             rho_mes = states[k*(resolution÷multiplexing)]
             normalize!(rho_mes)
@@ -417,7 +419,9 @@ function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot
             # end
 
             # add shot 
-            temp_ar = Qmeasure_shot_mean(rho_mes, shot_nb)
+            temp, temp_errors = Qmeasure_shot_error_theory(rho_mes, shot_nb)
+            push!(temp_ar, temp)
+            push!(errors, temp_errors)
         end
         reservoir_output[i,:] = temp_ar
         ψ = states[end]
@@ -429,6 +433,6 @@ function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot
     for i in 1:train_length
         input_times[i] = (i*time_interval)*(10^-9)
     end
-    return input_times,reservoir_output
+    return input_times,reservoir_output, errors
 end
 

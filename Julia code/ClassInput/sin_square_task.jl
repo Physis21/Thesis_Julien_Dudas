@@ -77,7 +77,7 @@ training_x,training_y,test_x,test_y = createDataset(25)
 ## model
 time_resolution = 300
 time_interval = 100  # ns
-offset = 1
+offset = 1 # value of 1 so that input doesn't become negative when sin(x) = -1
 # sampling = 6
 sampling = 1
 
@@ -131,10 +131,10 @@ function classification_task()
     println("end of calculation")
 end
 
-function classification_task_shots()
+function classification_task_shots( shot_nb=(Ndim+1)^4 )
     println("calculation initialized")
 
-    global time_plot, X = Qmodel_shots(training_x,time_interval,time_resolution,sampling,offset)
+    global time_plot, X = Qmodel(training_x,time_interval,time_resolution,sampling,offset)
     global Y = training_y
     # Train the model by Moore-Penrose pseudoinversion.
     global W = pinv(X) * Y
@@ -142,9 +142,9 @@ function classification_task_shots()
     # We pass the latest training state in order to avoid the need for another washout
     println("training complete")
     ##model
-    global time_plot, X_test = Qmodel_shots(test_x,time_interval,time_resolution,sampling,offset)
+    global time_plot, X_test, errors = Qmodel_shots(test_x,time_interval,time_resolution,sampling,shot_nb,offset)
     global Y_test = X_test * W
-
+    global Y_test_errors = errors * W
     println("testing complete")
     ## Compute and print the accuracy
     global correct0 = 0
@@ -163,6 +163,7 @@ function classification_task_shots()
     gr()
     p = plot(1e9*time_plot[index_min:index_max],
     final_plot[index_min:index_max,:],
+    yerror = Y_test_errors[index_min:index_max],
     size=(1132,700),title=figure_title,
     margin = 5Plots.mm,
     tickfontsize = 12,legendfontsize=12,fmt=:pdf,

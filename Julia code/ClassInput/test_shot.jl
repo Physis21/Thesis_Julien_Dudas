@@ -25,5 +25,5 @@ end
 #     println(test_result[i])
 # end
 println("Qmeasure_shot test")
-Qmeasure_shot_error(test_ρ, (Ndim+1)^4, (Ndim+1)^4, 1)
-Qmeasure_shot_error_theory(test_ρ, (Ndim+1)^4, 1)
+Qmeasure_shot_error(test_ρ, (Ndim+1)^2, (Ndim+1)^4, 1)
+@time Qmeasure_shot_error_theory(test_ρ, (Ndim+1)^2, 1)
