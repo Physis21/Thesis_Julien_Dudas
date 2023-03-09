@@ -4,6 +4,7 @@ using Plots
 using BenchmarkTools
 using Random
 using JLD2
+using LaTeXStrings
 
 #usually keep Ndim = 7 for computing speed and accuracy of quantum simulations
 Ndim = 8
@@ -264,7 +265,7 @@ function Qmeasure_shot(ρ, shot_nb=1)
     
 end
 
-function Qmeasure_shot_mean(ρ, shot_nb=100, print_output = 0, histogram_output = 0)
+function Qmeasure_shot_mean(ρ, shot_nb=100, print_output = 0, heatmap_output = 0)
     
     # if all the shots are different, can't make error bars
     shots, shot_possibilities = Qmeasure_shot(ρ, shot_nb)
@@ -292,7 +293,8 @@ function Qmeasure_shot_mean(ρ, shot_nb=100, print_output = 0, histogram_output 
         
     end
 
-    if histogram_output == 1
+    if heatmap_output == 1
+
         println("print heatmap")
         means_histogram = reshape(shot_means, meas_max+1, meas_max+1)
         gr()
@@ -306,6 +308,84 @@ function Qmeasure_shot_mean(ρ, shot_nb=100, print_output = 0, histogram_output 
     end
     
     return shot_means
+end
+
+function Qmeasure_shot_error(ρ, shot_nb=100, N = (Ndim+1)^4, heatmap_output = 0)
+    real_values = Float64[]
+
+    for i1 in 0:meas_max
+        for i2 in 0:meas_max
+            push!(real_values, real(expect(test_ρ,fockstate(basis_a,i1)⊗fockstate(basis_b,i2))) )
+        end
+    end
+
+    var = zeros((meas_max+1)^2 )
+    for i1 in 1:N
+
+        shot_means = Qmeasure_shot_mean(ρ, shot_nb)
+        for i2 in 1:length(shot_means)
+            var[i2] += ((shot_means[i2] - real_values[i2])^2) / N
+        end
+        
+    end
+
+    diff = [sqrt(v) for v in var]
+    
+    if heatmap_output == 1
+
+        println("print heatmap")
+        diff_histogram = reshape(diff, meas_max+1, meas_max+1)
+
+        gr()
+
+        axis_level = 0:meas_max
+
+        h = heatmap(
+        axis_level, axis_level, (x, y)->log10.(diff_histogram[x+1, y+1]), c=:viridis,
+        nx=50, ny=50, 
+        xlabel="b levels", ylabel = "a levels", title = string("shot error for ",L"shot_{nb} = {%$shot_nb}", "and ", L"N = {%$N}")
+        )
+        
+
+        display(h)
+        savefig(figpath*"experiment.pdf")
+
+    end
+end
+
+function Qmeasure_shot_error_theory(ρ, N = (Ndim+1)^4, heatmap_output = 0)
+    real_values = Float64[]
+
+    for i1 in 0:meas_max
+        for i2 in 0:meas_max
+            push!(real_values, real(expect(test_ρ,fockstate(basis_a,i1)⊗fockstate(basis_b,i2))) )
+        end
+    end
+
+    #theoretical value of error with multinomial law
+
+    diff = [sqrt(p*(1-p)/N) for p in real_values]
+
+    if heatmap_output == 1
+
+        println("print heatmap")
+        diff_histogram = reshape(diff, meas_max+1, meas_max+1)
+
+        gr()
+
+        axis_level = 0:meas_max
+
+        h = heatmap(
+        axis_level, axis_level, (x, y)->log10.(diff_histogram[x+1, y+1]), c=:viridis,
+        nx=50, ny=50, 
+        xlabel="b levels", ylabel = "a levels", title = string("theoretical shot error for ",L"N = {%$N}")
+        )
+        
+        display(h)
+        savefig(figpath*"theory.pdf")
+
+    end
+
 end
 
 function Qmodel_shots(train,time_interval,resolution,multiplexing,offset=0, shot_nb = Ndim^4)

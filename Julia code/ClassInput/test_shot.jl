@@ -7,8 +7,8 @@ using QuantumOptics
 include("Qreservoir.jl")
 figpath = "C:/Users/julie/Downloads/"
 
-# ψtest = coherentstate(basis_a, 1) ⊗ coherentstate(basis_b, 2)
-ψtest = fockstate(basis_a, 0) ⊗ fockstate(basis_b, 2)
+ψtest = coherentstate(basis_a, 1) ⊗ coherentstate(basis_b, 2)
+# ψtest = fockstate(basis_a, 0) ⊗ fockstate(basis_b, 2)
 
 test_ρ = tensor( ψtest, dagger( ψtest ))
 println("printing test_ρ matrix , size is ", size(test_ρ))
@@ -24,5 +24,6 @@ end
 # for i in 1:length(test_result)
 #     println(test_result[i])
 # end
-
-Qmeasure_shot_mean_error(test_ρ, (Ndim+1)^4, 0,1)
+println("Qmeasure_shot test")
+Qmeasure_shot_error(test_ρ, (Ndim+1)^4, (Ndim+1)^4, 1)
+Qmeasure_shot_error_theory(test_ρ, (Ndim+1)^4, 1)
