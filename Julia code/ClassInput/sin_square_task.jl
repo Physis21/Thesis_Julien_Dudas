@@ -76,7 +76,9 @@ training_x,training_y,test_x,test_y = createDataset(25)
 # display(plot(time_ar,training_x))
 ## model
 time_resolution = 300
-time_interval = 100  # ns
+time_interval = 50  # ns , before used time_interval = 100ns
+
+
 offset = 1 # value of 1 so that input doesn't become negative when sin(x) = -1
 # sampling = 6
 sampling = 1
@@ -124,7 +126,7 @@ function classification_task()
 
     #save JLD2 file
 
-    filename = string("sin_square_features_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
+    filename = string("sin_square_features_time_interval=", time_interval,"_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
     #target (test_y) is useful for post processing
     save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test, "target", test_y)
 
@@ -162,7 +164,6 @@ function classification_task_shots( shot_nb=(Ndim+1)^4 )
     gr()
     p = plot(1e9*time_plot[index_min:index_max],
     final_plot[index_min:index_max,:],
-    yerror = Y_test_errors[index_min:index_max],
     size=(1132,700),title=figure_title,
     margin = 5Plots.mm,
     tickfontsize = 12,legendfontsize=12,fmt=:pdf,
@@ -174,7 +175,7 @@ function classification_task_shots( shot_nb=(Ndim+1)^4 )
 
     #save JLD2 file
 
-    filename = string("shots_sin_square_features_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
+    filename = string("shots_sin_square_features_time_interval=", time_interval,"_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
     #target (test_y) is useful for post processing
     save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test, "target", test_y)
 
