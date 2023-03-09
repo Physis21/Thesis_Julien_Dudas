@@ -134,7 +134,7 @@ end
 function classification_task_shots( shot_nb=(Ndim+1)^4 )
     println("calculation initialized")
 
-    global time_plot, X = Qmodel(training_x,time_interval,time_resolution,sampling,offset)
+    global time_plot, X = Qmodel_shots(training_x,time_interval,time_resolution,sampling,shot_nb,offset)
     global Y = training_y
     # Train the model by Moore-Penrose pseudoinversion.
     global W = pinv(X) * Y
@@ -142,9 +142,8 @@ function classification_task_shots( shot_nb=(Ndim+1)^4 )
     # We pass the latest training state in order to avoid the need for another washout
     println("training complete")
     ##model
-    global time_plot, X_test, errors = Qmodel_shots(test_x,time_interval,time_resolution,sampling,shot_nb,offset)
+    global time_plot, X_test = Qmodel_shots(test_x,time_interval,time_resolution,sampling,shot_nb,offset)
     global Y_test = X_test * W
-    global Y_test_errors = errors * W
     println("testing complete")
     ## Compute and print the accuracy
     global correct0 = 0

@@ -386,8 +386,18 @@ function Qmeasure_shot_error_theory(ρ, shot_nb = (Ndim+1)^4, heatmap_output = 0
 
     end
 
-    # return real_values, diff
+    return real_values, diff
 
+end
+
+function Qmeasure_shot_theory(ρ, shot_nb = (Ndim+1)^4)
+    real_values, diff = Qmeasure_shot_error_theory(ρ, shot_nb)
+    result = Float64[]
+    for i in 1:length(real_values)
+        #add a random number from gaussian distribution times the error bar
+        push!(result, real_values[i] + (randn() * diff[i]))
+    end
+    return result
 end
 
 function Qmodel_shots(train,time_interval,resolution,multiplexing,shot_nb=(Ndim+1)^4,offset=0,)
@@ -405,7 +415,7 @@ function Qmodel_shots(train,time_interval,resolution,multiplexing,shot_nb=(Ndim+
         H_full = H_0(param_0) + H_drive(param_drive)
 
         tout,states = timeevolution.master(input_times[i,:],ψ,H_full,c_ops,rates=[κA,κB])
-        temp_ar = Float64[]; errors = Float64[]
+        temp_ar = Float64[]
         for k in 1:multiplexing
             rho_mes = states[k*(resolution÷multiplexing)]
             normalize!(rho_mes)
@@ -419,9 +429,8 @@ function Qmodel_shots(train,time_interval,resolution,multiplexing,shot_nb=(Ndim+
             # end
 
             # add shot 
-            temp, temp_errors = Qmeasure_shot_error_theory(rho_mes, shot_nb)
-            push!(temp_ar, temp)
-            push!(errors, temp_errors)
+            temp = Qmeasure_shot_theory(rho_mes, shot_nb)
+            temp_ar = vcat(temp_ar, temp)
         end
         reservoir_output[i,:] = temp_ar
         ψ = states[end]
@@ -433,6 +442,6 @@ function Qmodel_shots(train,time_interval,resolution,multiplexing,shot_nb=(Ndim+
     for i in 1:train_length
         input_times[i] = (i*time_interval)*(10^-9)
     end
-    return input_times,reservoir_output, errors
+    return input_times,reservoir_output
 end
 
