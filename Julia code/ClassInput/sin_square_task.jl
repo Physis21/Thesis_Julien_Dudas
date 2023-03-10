@@ -60,8 +60,8 @@ function createDataset(nb_exemples)
 
     return training_x,training_y,test_x,test_y
 end
-# training_x,training_y,test_x,test_y = createDataset(100)
-training_x,training_y,test_x,test_y = createDataset(25)
+training_x,training_y,test_x,test_y = createDataset(100)
+# training_x,training_y,test_x,test_y = createDataset(25)
 
 # gr()
 # p = plot(training_x[1:75],
@@ -76,7 +76,7 @@ training_x,training_y,test_x,test_y = createDataset(25)
 # display(plot(time_ar,training_x))
 ## model
 time_resolution = 300
-time_interval = 50  # ns , before used time_interval = 100ns
+time_interval = 100  # ns , before used time_interval = 100ns
 
 
 offset = 1 # value of 1 so that input doesn't become negative when sin(x) = -1

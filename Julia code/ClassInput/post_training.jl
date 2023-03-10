@@ -33,7 +33,7 @@ gr()
 
 figure_title = string("wA =", wA, "GHz, wB = ", wB, "GHz, g =", g/1e6, "MHz,
 κA =", κA/1e6, "MHz, κB =", κB/1e6, "MHz, sampling=", sampling, "_meas_max=", meas_max )
-filename = string("sin_square_features_eA=1.2e6_eB=1.2e6_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
+filename = string("sin_square_features_time_interval=50_eA=1.2e6_eB=1.2e6_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
 # filename = string("sin_square_features_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
 
 figname = string("sin_square_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".pdf")
@@ -54,7 +54,7 @@ target = load(filename, "target")
 
 # make all plots at once
 
-for meas_max_new in 1:3
+for meas_max_new in 1:5
 
     X_new = zeros(size(X)[1], sampling*(meas_max_new+1)^2 )
     X_test_new = zeros(size(X_test)[1], sampling*(meas_max_new+1)^2 )
@@ -92,7 +92,7 @@ for meas_max_new in 1:3
     xlabel!(p,"Time (us)")
     display(p)
 
-    figname = string("sin_square_eA=1.2e6_eB=1.2e6_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
+    figname = string("sin_square_time_interval=50_eA=1.2e6_eB=1.2e6_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
     savefig(figname)
 end
 

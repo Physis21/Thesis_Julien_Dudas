@@ -35,8 +35,8 @@ wA = 10e9
 wB = 9e9
 g = 7e8
 
-κA = 17e6
-κB = 21e6
+κA = 8.5e6 #used to be 17e6
+κB = 10.5e6 #used to be 21e6
 eA = 1.2e6
 eB = 1.2e6
 
@@ -315,7 +315,7 @@ function Qmeasure_shot_error(ρ, shot_nb=100, N = (Ndim+1)^4, heatmap_output = 0
 
     for i1 in 0:meas_max
         for i2 in 0:meas_max
-            push!(real_values, real(expect(test_ρ,fockstate(basis_a,i1)⊗fockstate(basis_b,i2))) )
+            push!(real_values, real(expect(ρ,fockstate(basis_a,i1)⊗fockstate(basis_b,i2))) )
         end
     end
 
@@ -358,7 +358,7 @@ function Qmeasure_shot_error_theory(ρ, shot_nb = (Ndim+1)^4, heatmap_output = 0
 
     for i1 in 0:meas_max
         for i2 in 0:meas_max
-            push!(real_values, real(expect(test_ρ,fockstate(basis_a,i1)⊗fockstate(basis_b,i2))) )
+            push!(real_values, real(expect(ρ,fockstate(basis_a,i1)⊗fockstate(basis_b,i2))) )
         end
     end
 
