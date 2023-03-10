@@ -35,8 +35,8 @@ wA = 10e9
 wB = 9e9
 g = 7e8
 
-κA = 8.5e6 #used to be 17e6
-κB = 10.5e6 #used to be 21e6
+κA = 17e6 #used to be 17e6
+κB = 21e6 #used to be 21e6
 eA = 1.2e6
 eB = 1.2e6
 
