@@ -7,7 +7,7 @@ using JLD2
 using LaTeXStrings
 
 #usually keep Ndim = 7 for computing speed and accuracy of quantum simulations
-Ndim = 8
+Ndim = 9
 basis_a = FockBasis(Ndim)
 basis_b = FockBasis(Ndim)
 basis = basis_a ⊗ basis_b
@@ -37,8 +37,8 @@ g = 7e8
 
 κA = 17e6 #used to be 17e6
 κB = 21e6 #used to be 21e6
-eA = 1.2e6
-eB = 1.2e6
+eA = 1.4e6
+eB = 1.4e6
 
 # !!!!! for these parameters and Ndim = 7, eA and eB shouldn't exceed 0.9e6
 # !!!!! for these parameters and Ndim = 8, eA and eB shouldn't exceed 1.2e6
