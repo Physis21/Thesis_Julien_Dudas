@@ -104,7 +104,7 @@ function constant_drive(show = 1,heatmap_output = 1, resolution = 10000, max_tim
         ylabel!(p,"Average populations")
         display(p)
         #savefig(figpath*"constantdrive_high_g.pdf")
-        savefig(figpath*"test_eA=1.2e6_eB=1.2e6_Ndim=8.pdf")
+        #savefig(figpath*"test_eA=1.2e6_eB=1.2e6_Ndim=8.pdf")
     end
 
     if heatmap_output == 1

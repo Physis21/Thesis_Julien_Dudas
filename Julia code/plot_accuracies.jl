@@ -13,7 +13,10 @@ accuracies_classical_dynamic = [61, 85, 96.5, 99.5]
 # accuracies_quantum = [68.17, 81.20, 77.94, 100] #50ns normal kappa
 # accuracies_quantum = [75.93, 99.74, 99.74, 99.74] 
 # accuracies_quantum = [74.69, 83.71, 89.72, 87.47] #100ns half kappa
-accuracies_quantum = [88.24, 94.12, 94.12, 100]
+# accuracies_quantum = [88.24, 94.12, 94.12, 100]
+accuracies_quantum = [74.93, 76.69, 95.73, 100] # half sine 
+
+pre_text = "half_sine_"
 
 accuracies = hcat(accuracies_classical_static, accuracies_classical_dynamic, accuracies_quantum)
 neuron_numbers_hcat = hcat(neuron_numbers,neuron_numbers,neuron_numbers2)
@@ -23,6 +26,7 @@ gr()
 p = plot(neuron_numbers,
 accuracies,
 size=(700,400),
+title = "inputs are sin/2 and square/2",
 margin = 5Plots.mm,
 shape = :circle,
 tickfontsize = 10,legendfontsize=12,fmt=:pdf,
@@ -32,5 +36,5 @@ xlabel!(p,"Number of neurons")
 ylabel!("Accuracy")
 display(p)
 
-figname = string("accuracies_400dataset_eA=1.2e6_eB=1.2e6_sampling=2.pdf")
+figname = string(pre_text, "accuracies_eA=1.2e6_eB=1.2e6_sampling=2.pdf")
 savefig(figname)

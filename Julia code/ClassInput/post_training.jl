@@ -5,7 +5,7 @@ include("sin_square_task.jl")
 
 
 figpath = "C:/Users/julie/Downloads/"
-
+pre_text = "half_sine_"
 
 function compute_accuracy(predicted_test, test_y)
     correct0 = 0
@@ -33,10 +33,10 @@ gr()
 
 figure_title = string("wA =", wA, "GHz, wB = ", wB, "GHz, g =", g/1e6, "MHz,
 κA =", κA/1e6, "MHz, κB =", κB/1e6, "MHz, sampling=", sampling, "_meas_max=", meas_max )
-filename = string("sin_square_features_400dataset_eA=1.2e6_eB=1.2e6_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
+filename = string(pre_text, "sin_square_features_eA=1.2e6_eB=1.2e6_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
 # filename = string("sin_square_features_coupling=", g/1e6, "MHz_kappas=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".jld2")
 
-figname = string("sin_square_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".pdf")
+figname = string(pre_text, "sin_square_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmax=", meas_max , "_sampling=", sampling, ".pdf")
 
 time_plot = load(filename, "time_plot")
 X = load(filename, "X")
@@ -92,7 +92,7 @@ for meas_max_new in 1:5
     xlabel!(p,"Time (us)")
     display(p)
 
-    figname = string("sin_square_400dataset_eA=1.2e6_eB=1.2e6_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
+    figname = string(pre_text, "sin_square_eA=1.2e6_eB=1.2e6_coupling=", g/1e6, "MHz_κs=", κA/1e6,"_", κB/1e6, "MHz_mesmaxnew=", meas_max_new , "_sampling=", sampling, "_accuracy=", accuracy, ".pdf")
     savefig(figname)
 end
 

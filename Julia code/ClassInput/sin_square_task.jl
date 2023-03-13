@@ -81,7 +81,7 @@ time_resolution = 300
 time_interval = 100  # ns , before used time_interval = 100ns
 
 
-offset = 1 # value of 1.1 so that input doesn't become negative nor 0 when sin(x) = -1
+offset = 0.5 # value of 1.1 so that input doesn't become negative nor 0 when sin(x) = -1
 # sampling = 6
 sampling = 1
 
@@ -128,9 +128,20 @@ function classification_task()
 
     #save JLD2 file
 
+    parameters = Dict([("wA", wA),
+    ("wB", wB),
+    ("g", g),
+    ("κA", κA),
+    ("κB", κB),
+    ("eA", eA),
+    ("eB", eB),
+    ("meas_max", meas_max),
+    ("sampling", sampling),
+    ("time_interval", time_interval)])
+
     filename = string(pre_text, "sin_square_features_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
     #target (test_y) is useful for post processing
-    save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test, "target", test_y)
+    save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test, "target", test_y, "parameters", parameters)
 
     println("end of calculation")
 end
@@ -177,9 +188,22 @@ function classification_task_shots( shot_nb=(Ndim+1)^4 )
 
     #save JLD2 file
 
-    filename = string(pre_text, "sin_square_features_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
+    filename = string(pre_text, "shots_sin_square_features_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
     #target (test_y) is useful for post processing
-    save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test, "target", test_y)
+
+    parameters = Dict([("wA", wA),
+    ("wB", wB),
+    ("g", g),
+    ("κA", κA),
+    ("κB", κB),
+    ("eA", eA),
+    ("eB", eB),
+    ("meas_max", meas_max),
+    ("sampling", sampling),
+    ("time_interval", time_interval),
+    ("shot_nb", shot_nb)])
+
+    save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test, "target", test_y, "parameters", parameters)
 
     println("end of calculation")
 end
