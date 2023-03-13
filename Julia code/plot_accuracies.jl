@@ -10,8 +10,9 @@ accuracies_classical_dynamic = [61, 85, 96.5, 99.5]
 # accuracies_quantum = [70.92, 83.45, 94.49, 100.0]
 # accuracies_quantum = [73.18, 94.49, 94.49, 99.74]
 # accuracies_quantum = [84.21, 94.73, 94.73, 100]
-# accuracies_quantum = [68.17, 81.20, 77.94, 100]
-# accuracies_quantum = [75.93, 99.74, 99.74, 99.74]
+# accuracies_quantum = [68.17, 81.20, 77.94, 100] #50ns normal kappa
+# accuracies_quantum = [75.93, 99.74, 99.74, 99.74] 
+# accuracies_quantum = [74.69, 83.71, 89.72, 87.47] #100ns half kappa
 accuracies_quantum = [88.24, 94.12, 94.12, 100]
 
 accuracies = hcat(accuracies_classical_static, accuracies_classical_dynamic, accuracies_quantum)

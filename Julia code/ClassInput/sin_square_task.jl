@@ -5,6 +5,7 @@ using LinearAlgebra
 
 include("Qreservoir.jl")
 figpath = "C:/Users/julie/Downloads/"
+pre_text = "half_sine_"
 
 # dataset with arbitrary resolution
 
@@ -35,11 +36,12 @@ figpath = "C:/Users/julie/Downloads/"
 # end
 
 # dataset with resolution = 8, and sine values exact 0, 0.7071, 1 !
+# divide values by 2
 function createDataset(nb_exemples)
     data = rand([0,1],nb_exemples)
     time_function = LinRange(0.,2*pi,8)
-    square_ar = vcat([1 for i in 1:4],[-1 for i in 1:4])
-    sin_ar = [0,0.7071,1,0.7071,0,-0.7071,-1,-0.7071]
+    square_ar = vcat([1 for i in 1:4],[-1 for i in 1:4])/2
+    sin_ar = [0,0.7071,1,0.7071,0,-0.7071,-1,-0.7071]/2
 
     dataset = Float64[]
     target = Float64[]
@@ -79,7 +81,7 @@ time_resolution = 300
 time_interval = 100  # ns , before used time_interval = 100ns
 
 
-offset = 1 # value of 1 so that input doesn't become negative when sin(x) = -1
+offset = 1 # value of 1.1 so that input doesn't become negative nor 0 when sin(x) = -1
 # sampling = 6
 sampling = 1
 
@@ -126,7 +128,7 @@ function classification_task()
 
     #save JLD2 file
 
-    filename = string("sin_square_features_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
+    filename = string(pre_text, "sin_square_features_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
     #target (test_y) is useful for post processing
     save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test, "target", test_y)
 
@@ -175,7 +177,7 @@ function classification_task_shots( shot_nb=(Ndim+1)^4 )
 
     #save JLD2 file
 
-    filename = string("shots_sin_square_features_time_interval=", time_interval,"_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
+    filename = string(pre_text, "sin_square_features_eA=", eA, "_eB=" , eB,"_coupling=", g/1e6, "MHz_kappas=", κA/1e6, "_", κB/1e6, "MHz_mesmax=", meas_max, "_sampling=", sampling, ".jld2")    
     #target (test_y) is useful for post processing
     save(filename, "time_plot", time_plot, "X", X, "X_test", X_test, "Y", Y, "Y_test", Y_test, "target", test_y)
 

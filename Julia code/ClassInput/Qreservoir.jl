@@ -7,7 +7,7 @@ using JLD2
 using LaTeXStrings
 
 #usually keep Ndim = 7 for computing speed and accuracy of quantum simulations
-Ndim = 9
+Ndim = 8
 basis_a = FockBasis(Ndim)
 basis_b = FockBasis(Ndim)
 basis = basis_a ⊗ basis_b
@@ -37,8 +37,8 @@ g = 7e8
 
 κA = 17e6 #used to be 17e6
 κB = 21e6 #used to be 21e6
-eA = 1.4e6
-eB = 1.4e6
+eA = 1.2e6
+eB = 1.2e6
 
 # !!!!! for these parameters and Ndim = 7, eA and eB shouldn't exceed 0.9e6
 # !!!!! for these parameters and Ndim = 8, eA and eB shouldn't exceed 1.2e6
@@ -73,7 +73,7 @@ param_drive = [κA,κB,eA,eB]
 H_full = H_0(param_0) + H_drive(param_drive)
 c_ops = [a,b]
 
-function constant_drive(show = 1,resolution = 10000, max_time = 50*(10^-9))
+function constant_drive(show = 1,heatmap_output = 1, resolution = 10000, max_time = 50*(10^-9))
     tspan = LinRange(0,max_time,resolution)
     tout,states = timeevolution.master(tspan,vacuum,H_full,c_ops,rates=[κA,κB])
     Z1 = fockstate(basis_a,0)⊗fockstate(basis_b,0)⊗dagger(fockstate(basis_a,0)⊗fockstate(basis_b,0))
@@ -83,6 +83,13 @@ function constant_drive(show = 1,resolution = 10000, max_time = 50*(10^-9))
     plot_means = hcat(real(expect(Na,states)),
     real(expect(Nb,states)))
 
+    real_values = Float64[]
+
+    for i1 in 0:meas_max
+        for i2 in 0:meas_max
+            push!(real_values, real(expect(states[end],fockstate(basis_a,i1)⊗fockstate(basis_b,i2))) )
+        end
+    end
     #plot means Na and Nb
     if show == 1
         gr()
@@ -98,6 +105,20 @@ function constant_drive(show = 1,resolution = 10000, max_time = 50*(10^-9))
         display(p)
         #savefig(figpath*"constantdrive_high_g.pdf")
         savefig(figpath*"test_eA=1.2e6_eB=1.2e6_Ndim=8.pdf")
+    end
+
+    if heatmap_output == 1
+
+        println("print heatmap")
+        ρ_histogram = reshape(real_values, meas_max+1, meas_max+1)
+        gr()
+        axis_level = 0:meas_max
+        h = heatmap(
+        axis_level, axis_level, (x, y)->ρ_histogram[x+1, y+1], c=:viridis,
+        nx=50, ny=50, 
+        )
+        display(h)
+
     end
 
 end
@@ -138,9 +159,7 @@ function constant_drive_change(train=squaresin,time_interval=100,offset=1,show=1
         end
 
         ψ = states[end]
-#        if i%100 == 0
-#            println("100 simulations passed, i = ", i)
-#        end
+
     end
     input_times = zeros(train_length*resolution)
     for i in 1:train_length
