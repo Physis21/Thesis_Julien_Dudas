@@ -414,8 +414,8 @@ function Qmeasure_shot_theory(ρ, shot_nb = (Ndim+1)^4)
     result = Float64[]
     for i in 1:length(real_values)
         #add a random number from gaussian distribution times the error bar
-        push!(result, real_values[i] + (randn() * diff[i]))
-    end
+        push!(result, max(real_values[i] + (randn() * diff[i]), 0))
+    end 
     return result
 end
 
