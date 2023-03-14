@@ -5,7 +5,7 @@ using LinearAlgebra
 
 include("Qreservoir.jl")
 figpath = "C:/Users/julie/Downloads/"
-pre_text = "half_sine_"
+pre_text = "half_sine_offset_0.6_"
 
 # dataset with arbitrary resolution
 
@@ -81,7 +81,7 @@ time_resolution = 300
 time_interval = 100  # ns , before used time_interval = 100ns
 
 
-offset = 0.5 # value of 1.1 so that input doesn't become negative nor 0 when sin(x) = -1
+offset = 0.6 # value of 0.6 so that input doesn't become negative nor 0 when sin(x) = -1
 # sampling = 6
 sampling = 1
 

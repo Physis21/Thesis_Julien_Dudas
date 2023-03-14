@@ -5,7 +5,7 @@ include("sin_square_task.jl")
 
 
 figpath = "C:/Users/julie/Downloads/"
-pre_text = "half_sine_"
+pre_text = "half_sine_offset_0.6_"
 
 function compute_accuracy(predicted_test, test_y)
     correct0 = 0
