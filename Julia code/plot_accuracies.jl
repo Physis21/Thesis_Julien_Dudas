@@ -14,8 +14,8 @@ accuracies_classical_dynamic = [61, 85, 96.5, 99.5]
 # accuracies_quantum = [75.93, 99.74, 99.74, 99.74] 
 # accuracies_quantum = [74.69, 83.71, 89.72, 87.47] #100ns half kappa
 # accuracies_quantum = [88.24, 94.12, 94.12, 100]
-accuracies_quantum = [74.93, 76.69, 95.73, 100] # half sine 
-
+accuracies_quantum = [77.69, 80.20, 94.73, ] # half sine 
+popo = 6
 pre_text = "half_sine_"
 
 accuracies = hcat(accuracies_classical_static, accuracies_classical_dynamic, accuracies_quantum)
